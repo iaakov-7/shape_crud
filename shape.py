@@ -13,3 +13,4 @@ class Shape:
        data = self.__dict__.copy()
        data["area"] = self.get_area() 
        data["perimeter"] = self.get_perimeter() 
+       return data
