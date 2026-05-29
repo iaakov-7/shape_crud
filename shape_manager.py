@@ -16,20 +16,20 @@ class ShapeManager:
         choice = input("enter choice: ") 
         match choice:
             case "1":
-                shape_id = self.handele_new_id()
+                shape_id = self.handele_id_for_create()
                 side = int(input("Enter square side:  "))
                 square_object = Square(shape_id,side)
                 self.shapes.append(square_object)
                 self.save_to_json()
             case "2":
-                shape_id = self.handele_new_id()
+                shape_id = self.handele_id_for_create()
                 width = int(input("Enter rectangle width:  "))
                 height = int(input("Enter rectangle height:  "))
                 rectangle_object = Rectangle(shape_id,width,height)
                 self.shapes.append(rectangle_object)
                 self.save_to_json()
             case "3":
-                shape_id = self.handele_new_id()
+                shape_id = self.handele_id_for_create()
                 base = int(input("Enter triangle base:  "))
                 height = int(input("Enter triangle height:  "))
                 side_a = int(input("Enter triangle side_a:  "))
@@ -39,13 +39,13 @@ class ShapeManager:
                 self.shapes.append(triangle_object)
                 self.save_to_json() 
             case "4":
-                shape_id = self.handele_new_id()
+                shape_id = self.handele_id_for_create()
                 radius = int(input("Enter circle radius:  "))
                 circle_object = Circle(shape_id,radius)
                 self.shapes.append(circle_object)
                 self.save_to_json() 
             case "5":
-                shape_id = self.handele_new_id()
+                shape_id = self.handele_id_for_create()
                 side = int(input("Enter hexagon side:  "))
                 hexagon_object = Hexagon(shape_id,side)
                 self.shapes.append(hexagon_object)
@@ -60,19 +60,31 @@ class ShapeManager:
                 print(f"{key}: {value}") 
             print("*****")
     
-    def update_shape(self, shape_id, new_data): 
-        pass 
- 
+    def update_shape(self): 
+        shape_id = self.handele_id_for_delete_or_update() 
+        for shape in self.shapes:
+            if str(shape.id) == shape_id:
+                shape_to_update = shape
+                match shape_to_update.shape_type:
+                    case "Rectangle":
+                        shape_to_update.width = int(input("Enter a new width: "))
+                        shape_to_update.height = int(input("Enter a new height: "))
+                    case "Square":    
+                        shape_to_update.side = int(input("Enter a new side: "))
+                    case "Triangle":
+                        shape_to_update.base = int(input("Enter a new base: "))
+                        shape_to_update.height = int(input("Enter a new height: "))
+                        shape_to_update.side_a = int(input("Enter a new side_a: "))
+                        shape_to_update.side_b = int(input("Enter a new side_b: "))
+                        shape_to_update.side_c = int(input("Enter a new side_c: "))
+                    case "Circle":
+                        shape_to_update.side = int(input("Enter a new side: "))  
+                    case "Hexagon":      
+                        shape_to_update.side = int(input("Enter a new side: "))
+                self.save_to_json()
+              
     def delete_shape(self): 
-        is_not_valid = True
-        while is_not_valid:
-            shape_id = input("Enter shape id: ")
-            if not self.validate_id(shape_id):
-                print("ID most be a number")
-            elif not self.is_id_exists(shape_id):
-                print(f"ID: {shape_id} is not exists")
-            else:
-                is_not_valid = False
+        shape_id = self.handele_id_for_delete_or_update()
         for shape in self.shapes:
             if str(shape.id) == shape_id:
                 self.shapes.remove(shape)
@@ -88,6 +100,17 @@ class ShapeManager:
             if str(shape.id) == _id:
                 return True
               
+    def handele_id_for_delete_or_update(self):
+        is_not_valid = True
+        while is_not_valid:
+            shape_id = input("Enter shape id: ")
+            if not self.validate_id(shape_id):
+                print("ID most be a number")
+            elif not self.is_id_exists(shape_id):
+                print(f"ID: {shape_id} is not exists")
+            else:
+                is_not_valid = False
+        return shape_id
     
     def handele_id_for_create(self):
             is_not_valid = True
