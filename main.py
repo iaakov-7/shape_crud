@@ -1,3 +1,4 @@
+#link for githab https://github.com/iaakov-7/shape_crud.git
 from shape_manager import ShapeManager
 
 manager = ShapeManager()
