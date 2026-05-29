@@ -16,12 +16,41 @@ class ShapeManager:
         choice = input("enter choice: ") 
         match choice:
             case "1":
-                shape_id = self.handele_id()
+                shape_id = self.handele_new_id()
                 side = int(input("Enter square side:  "))
                 square_object = Square(shape_id,side)
                 self.shapes.append(square_object)
                 self.save_to_json()
-
+            case "2":
+                shape_id = self.handele_new_id()
+                width = int(input("Enter rectangle width:  "))
+                height = int(input("Enter rectangle height:  "))
+                rectangle_object = Rectangle(shape_id,width,height)
+                self.shapes.append(rectangle_object)
+                self.save_to_json()
+            case "3":
+                shape_id = self.handele_new_id()
+                base = int(input("Enter triangle base:  "))
+                height = int(input("Enter triangle height:  "))
+                side_a = int(input("Enter triangle side_a:  "))
+                side_b = int(input("Enter triangle side_b:  "))
+                side_c = int(input("Enter triangle side_c:  "))                                
+                triangle_object = Triangle(shape_id,base,height,side_a,side_b,side_c)
+                self.shapes.append(triangle_object)
+                self.save_to_json() 
+            case "4":
+                shape_id = self.handele_new_id()
+                radius = int(input("Enter circle radius:  "))
+                circle_object = Circle(shape_id,radius)
+                self.shapes.append(circle_object)
+                self.save_to_json() 
+            case "5":
+                shape_id = self.handele_new_id()
+                side = int(input("Enter hexagon side:  "))
+                hexagon_object = Hexagon(shape_id,side)
+                self.shapes.append(hexagon_object)
+                self.save_to_json()                                              
+    
     def get_all_shapes(self): 
         pass 
  
@@ -65,7 +94,18 @@ class ShapeManager:
                 if shape["shape_type"] == "Square":
                     shape_object = Square(shape_id,shape["side"])
                     self.shapes.append(shape_object)
-
+                elif shape["shape_type"] == "Rectangle":
+                    shape_object = Rectangle(shape_id,shape["width"],shape["height"])
+                    self.shapes.append(shape_object)
+                elif shape["shape_type"] == "Triangle":
+                    shape_object = Triangle(shape_id,shape["base"],shape["height"],shape["side_a"],shape["side_b"],shape["side_c"])
+                    self.shapes.append(shape_object)
+                elif shape["shape_type"] == "Circle": 
+                    shape_object = Circle(shape_id,shape["radius"])
+                    self.shapes.append(shape_object)
+                elif shape["shape_type"] == "Hexagon": 
+                    shape_object = Hexagon(shape_id,shape["side"]) 
+                    self.shapes.append(shape_object)                           
 if __name__ == "__main__":
     maneger = ShapeManager()
     maneger.create_shape()
