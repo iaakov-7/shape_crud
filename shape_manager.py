@@ -13,49 +13,50 @@ class ShapeManager:
  
     def create_shape(self): 
         print("Choose shape:\n1. Square\n2. Rectangle\n3. Triangle\n4. Circle\n5. Hexagon")
-        choice = input("enter choice: ") 
+        choice = input("enter your choice: ") 
         match choice:
             case "1":
-                shape_id = self.handele_id_for_create()
-                side = int(input("Enter square side:  "))
+                shape_id = self.handle_id_for_create()
+                side = self.get_positive_int("Enter square side:  ")
                 square_object = Square(shape_id,side)
                 self.shapes.append(square_object)
                 self.save_to_json()
             case "2":
-                shape_id = self.handele_id_for_create()
-                width = int(input("Enter rectangle width:  "))
-                height = int(input("Enter rectangle height:  "))
+                shape_id = self.handle_id_for_create()
+                width = self.get_positive_int("Enter rectangle width:  ")
+                height = self.get_positive_int("Enter rectangle height:  ")
                 rectangle_object = Rectangle(shape_id,width,height)
                 self.shapes.append(rectangle_object)
                 self.save_to_json()
             case "3":
-                shape_id = self.handele_id_for_create()
-                base = int(input("Enter triangle base:  "))
-                height = int(input("Enter triangle height:  "))
-                side_a = int(input("Enter triangle side_a:  "))
-                side_b = int(input("Enter triangle side_b:  "))
-                side_c = int(input("Enter triangle side_c:  "))                                
+                shape_id = self.handle_id_for_create()
+                base = self.get_positive_int("Enter triangle base:  ")
+                height = self.get_positive_int("Enter triangle height:  ")
+                side_a = self.get_positive_int("Enter triangle side_a:  ")
+                side_b = self.get_positive_int("Enter triangle side_b:  ")
+                side_c = self.get_positive_int("Enter triangle side_c:  ")                                
                 triangle_object = Triangle(shape_id,base,height,side_a,side_b,side_c)
                 self.shapes.append(triangle_object)
                 self.save_to_json() 
             case "4":
-                shape_id = self.handele_id_for_create()
-                radius = int(input("Enter circle radius:  "))
+                shape_id = self.handle_id_for_create()
+                radius = self.get_positive_int("Enter circle radius:  ")
                 circle_object = Circle(shape_id,radius)
                 self.shapes.append(circle_object)
                 self.save_to_json() 
             case "5":
-                shape_id = self.handele_id_for_create()
-                side = int(input("Enter hexagon side:  "))
+                shape_id = self.handle_id_for_create()
+                side = self.get_positive_int("Enter hexagon side:  ")
                 hexagon_object = Hexagon(shape_id,side)
                 self.shapes.append(hexagon_object)
                 self.save_to_json()    
             case _:
-                print("Please enter numbers 1-5.")                                                  
+                print("You can enter only numbers 1-5")
+                return "not valid"                                                  
     
     def get_all_shapes(self):
         if not self.shapes:
-            print("There no shapes to show") 
+            print("There are no shapes to show") 
         for shape in self.shapes:
             shape = shape.to_dict()
             for key, value in shape.items():
@@ -63,36 +64,46 @@ class ShapeManager:
             print("*****")
     
     def update_shape(self): 
-        shape_id = self.handele_id_for_delete_or_update() 
+        shape_id = self.handle_id_for_delete_or_update() 
         for shape in self.shapes:
             if str(shape.id) == shape_id:
                 shape_to_update = shape
                 match shape_to_update.shape_type:
                     case "Rectangle":
-                        shape_to_update.width = int(input("Enter a new width: "))
-                        shape_to_update.height = int(input("Enter a new height: "))
+                        shape_to_update.width = self.get_positive_int("Enter a new width: ")
+                        shape_to_update.height = self.get_positive_int("Enter a new height: ")
                     case "Square":    
-                        shape_to_update.side = int(input("Enter a new side: "))
+                        shape_to_update.side = self.get_positive_int("Enter a new side: ")
                     case "Triangle":
-                        shape_to_update.base = int(input("Enter a new base: "))
-                        shape_to_update.height = int(input("Enter a new height: "))
-                        shape_to_update.side_a = int(input("Enter a new side_a: "))
-                        shape_to_update.side_b = int(input("Enter a new side_b: "))
-                        shape_to_update.side_c = int(input("Enter a new side_c: "))
+                        shape_to_update.base = self.get_positive_int("Enter a new base: ")
+                        shape_to_update.height = self.get_positive_int("Enter a new height: ")
+                        shape_to_update.side_a = self.get_positive_int("Enter a new side_a: ")
+                        shape_to_update.side_b = self.get_positive_int("Enter a new side_b: ")
+                        shape_to_update.side_c = self.get_positive_int("Enter a new side_c: ")
                     case "Circle":
-                        shape_to_update.side = int(input("Enter a new side: "))  
+                        shape_to_update.radius = self.get_positive_int("Enter a new radius: ")  
                     case "Hexagon":      
-                        shape_to_update.side = int(input("Enter a new side: "))
+                        shape_to_update.side = self.get_positive_int("Enter a new side: ")
                 self.save_to_json()
               
     def delete_shape(self): 
-        shape_id = self.handele_id_for_delete_or_update()
+        shape_id = self.handle_id_for_delete_or_update()
         for shape in self.shapes:
             if str(shape.id) == shape_id:
                 self.shapes.remove(shape)
                 self.save_to_json()
                 return            
-
+    
+    def get_positive_int(self,message):
+        while True:  
+            try:
+                value = int(input(message))
+                if value > 0:
+                    return value
+                print("Number must be > 0")
+            except ValueError:
+                print("Please enter a valid number")    
+    
     def validate_id(self,_id):
         return _id.isdigit()
             
@@ -102,19 +113,19 @@ class ShapeManager:
             if str(shape.id) == _id:
                 return True
               
-    def handele_id_for_delete_or_update(self):
+    def handle_id_for_delete_or_update(self):
         is_not_valid = True
         while is_not_valid:
             shape_id = input("Enter shape id: ")
             if not self.validate_id(shape_id):
-                print("ID most be a number")
+                print("ID must be a number")
             elif not self.is_id_exists(shape_id):
                 print(f"ID: {shape_id} is not exists")
             else:
                 is_not_valid = False
         return shape_id
     
-    def handele_id_for_create(self):
+    def handle_id_for_create(self):
             is_not_valid = True
             while is_not_valid:
                 shape_id = input("Enter shape id: ")
@@ -124,7 +135,7 @@ class ShapeManager:
                     if self.validate_id(shape_id):
                         is_not_valid = False
                     else:
-                        print("ID most be a number")   
+                        print("ID must be a number")   
             return int(shape_id)        
     
     def save_to_json(self): 
@@ -137,8 +148,6 @@ class ShapeManager:
         try:   
             with open("shapes.json","r",encoding="utf-8") as f:
                 content = json.load(f)
-                if content == [None]:
-                    return
                 for shape in content:
                     shape_id = shape["id"]
                     if shape["shape_type"] == "Square":
@@ -158,7 +167,5 @@ class ShapeManager:
                         self.shapes.append(shape_object) 
         except (FileNotFoundError,json.JSONDecodeError):
             self.shapes = []                                        
-if __name__ == "__main__":
-    maneger = ShapeManager()
-    maneger.delete_shape()
+
     

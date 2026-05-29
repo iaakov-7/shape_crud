@@ -1,1 +1,1 @@
-[{"id": 1, "shape_type": "Square", "side": 2, "area": 4, "perimeter": 8}]
+[{"id": 1, "shape_type": "Square", "side": 1, "area": 1, "perimeter": 4}, {"id": 5, "shape_type": "Hexagon", "side": 5, "area": 64.9519052838329, "perimeter": 30}, {"id": 4, "shape_type": "Hexagon", "side": 4, "area": 41.569219381653056, "perimeter": 24}, {"id": 2, "shape_type": "Rectangle", "width": 2, "height": 2, "area": 4, "perimeter": 8}, {"id": 8, "shape_type": "Square", "side": 99, "area": 9801, "perimeter": 396}, {"id": 0, "shape_type": "Square", "side": 4, "area": 16, "perimeter": 16}]
