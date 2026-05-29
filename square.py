@@ -10,5 +10,5 @@ class Square(Shape):
         return self.side * self.side
 
     def get_perimeter(self):
-        return self.side * 4    
+        return self.side * 4   
 

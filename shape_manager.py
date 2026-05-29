@@ -12,7 +12,7 @@ class ShapeManager:
         self.load_from_json() 
  
     def create_shape(self): 
-        print("Choose shape:\n1. Square\n2. Rectangle\n3. Triangle\n4. Circle\n5.Hexagon")
+        print("Choose shape:\n1. Square\n2. Rectangle\n3. Triangle\n4. Circle\n5. Hexagon\n0. Exit")
         choice = input("enter choice: ") 
         match choice:
             case "1":
@@ -49,34 +49,58 @@ class ShapeManager:
                 side = int(input("Enter hexagon side:  "))
                 hexagon_object = Hexagon(shape_id,side)
                 self.shapes.append(hexagon_object)
-                self.save_to_json()                                              
+                self.save_to_json()
+            case _:
+                print("Please enter numbers 0-5.")                                                  
     
     def get_all_shapes(self): 
-        pass 
- 
+        for shape in self.shapes:
+            shape = shape.to_dict()
+            for key, value in shape.items():
+                print(f"{key}: {value}") 
+            print("*****")
+    
     def update_shape(self, shape_id, new_data): 
         pass 
  
-    def delete_shape(self, shape_id): 
-        pass 
-
-    def validate_id(self,id):
-        if not isinstance(id,int):
-            raise ValueError("ID most be a number")
+    def delete_shape(self): 
+        is_not_valid = True
+        while is_not_valid:
+            shape_id = input("Enter shape id: ")
+            if not self.validate_id(shape_id):
+                print("ID most be a number")
+            elif not self.is_id_exists(shape_id):
+                print(f"ID: {shape_id} is not exists")
+            else:
+                is_not_valid = False
         for shape in self.shapes:
-                if int(shape.id) == id:
-                    raise ValueError("ID already exists choose another")
+            if str(shape.id) == shape_id:
+                self.shapes.remove(shape)
+                self.save_to_json()
+                return            
+
+    def validate_id(self,_id):
+        return _id.isdigit()
+            
+          
+    def is_id_exists(self,_id):    
+        for shape in self.shapes:
+            if str(shape.id) == _id:
+                return True
+              
     
-    def handele_new_id(self):
+    def handele_id_for_create(self):
             is_not_valid = True
             while is_not_valid:
-                try:
-                    shape_id = int(input("Enter shape id: "))
-                    self.validate_id(shape_id)
-                    is_not_valid = False
-                except ValueError as e:
-                    print(f"Error: {e}")
-            return shape_id        
+                shape_id = input("Enter shape id: ")
+                if self.is_id_exists(shape_id):
+                    print("ID already exists choose another")
+                else:
+                    if self.validate_id(shape_id):
+                        is_not_valid = False
+                    else:
+                        print("ID most be a number")   
+            return int(shape_id)        
     
     def save_to_json(self): 
         with open("shapes.json","w",encoding="utf-8") as f:
@@ -84,29 +108,32 @@ class ShapeManager:
             json.dump(list_for_json,f)
 
  
-    def load_from_json(self): 
-        with open("shapes.json","r",encoding="utf-8") as f:
-            content = json.load(f)
-            if content == [None]:
-                return
-            for shape in content:
-                shape_id = shape["id"]
-                if shape["shape_type"] == "Square":
-                    shape_object = Square(shape_id,shape["side"])
-                    self.shapes.append(shape_object)
-                elif shape["shape_type"] == "Rectangle":
-                    shape_object = Rectangle(shape_id,shape["width"],shape["height"])
-                    self.shapes.append(shape_object)
-                elif shape["shape_type"] == "Triangle":
-                    shape_object = Triangle(shape_id,shape["base"],shape["height"],shape["side_a"],shape["side_b"],shape["side_c"])
-                    self.shapes.append(shape_object)
-                elif shape["shape_type"] == "Circle": 
-                    shape_object = Circle(shape_id,shape["radius"])
-                    self.shapes.append(shape_object)
-                elif shape["shape_type"] == "Hexagon": 
-                    shape_object = Hexagon(shape_id,shape["side"]) 
-                    self.shapes.append(shape_object)                           
+    def load_from_json(self):
+        try:   
+            with open("shapes.json","r",encoding="utf-8") as f:
+                content = json.load(f)
+                if content == [None]:
+                    return
+                for shape in content:
+                    shape_id = shape["id"]
+                    if shape["shape_type"] == "Square":
+                        shape_object = Square(shape_id,shape["side"])
+                        self.shapes.append(shape_object)
+                    elif shape["shape_type"] == "Rectangle":
+                        shape_object = Rectangle(shape_id,shape["width"],shape["height"])
+                        self.shapes.append(shape_object)
+                    elif shape["shape_type"] == "Triangle":
+                        shape_object = Triangle(shape_id,shape["base"],shape["height"],shape["side_a"],shape["side_b"],shape["side_c"])
+                        self.shapes.append(shape_object)
+                    elif shape["shape_type"] == "Circle": 
+                        shape_object = Circle(shape_id,shape["radius"])
+                        self.shapes.append(shape_object)
+                    elif shape["shape_type"] == "Hexagon": 
+                        shape_object = Hexagon(shape_id,shape["side"]) 
+                        self.shapes.append(shape_object) 
+        except (FileNotFoundError,json.JSONDecodeError):
+            self.shapes = []                                        
 if __name__ == "__main__":
     maneger = ShapeManager()
-    maneger.create_shape()
+    maneger.delete_shape()
     
