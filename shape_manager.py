@@ -12,7 +12,7 @@ class ShapeManager:
         self.load_from_json() 
  
     def create_shape(self): 
-        print("Choose shape:\n1. Square\n2. Rectangle\n3. Triangle\n4. Circle\n5. Hexagon\n0. Exit")
+        print("Choose shape:\n1. Square\n2. Rectangle\n3. Triangle\n4. Circle\n5. Hexagon")
         choice = input("enter choice: ") 
         match choice:
             case "1":
@@ -49,11 +49,13 @@ class ShapeManager:
                 side = int(input("Enter hexagon side:  "))
                 hexagon_object = Hexagon(shape_id,side)
                 self.shapes.append(hexagon_object)
-                self.save_to_json()
+                self.save_to_json()    
             case _:
-                print("Please enter numbers 0-5.")                                                  
+                print("Please enter numbers 1-5.")                                                  
     
-    def get_all_shapes(self): 
+    def get_all_shapes(self):
+        if not self.shapes:
+            print("There no shapes to show") 
         for shape in self.shapes:
             shape = shape.to_dict()
             for key, value in shape.items():
